@@ -97,9 +97,11 @@
        * are cleared. This means that caching is effectively disabled for
        * that field.
        *
+       * We will not clear default values if the selectAll option is true.
+       *
        * Many thanks to Klaus Hartl for helping resolve this issue.
        */
-      if ($.browser.msie && !$this.attr('defaultValue') && (isCallback || $this.val() == o.example))
+      if ($.browser.msie && !$this.attr('defaultValue') && (isCallback || $this.val() == o.example) && !o.selectAll)
         $this.val('');
 
       /* Initially place the example text in the field if it is empty
@@ -125,8 +127,13 @@
 
         /* jQuery 1.1 has no hasClass(), so is() must be used instead. */
         if ($(this).is('.' + o.className)) {
-          $(this).val('');
           $(this).removeClass(o.className);
+
+          if (o.selectAll) {
+            $(this).select();
+          } else {
+            $(this).val('');
+          }
         }
       });
 
@@ -158,7 +165,8 @@
    *   $.fn.example.defaults.className = 'not_example';
    */
   $.fn.example.defaults = {
-    className: 'example'
+    className: 'example',
+    selectAll: false
   };
 
   /* All the class names used are stored as keys in the following array. */
